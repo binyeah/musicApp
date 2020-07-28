@@ -20,11 +20,4 @@ module.exports = {
                 .end()
         })
     },
-    // css: {
-    //     loaderOptions: {
-    //         sass: {
-    //             prependData: `@import "@/style/app.scss";` //引入全局变量   
-    //         }
-    //     }
-    // }
 }
