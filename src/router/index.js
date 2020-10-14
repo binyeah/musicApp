@@ -9,7 +9,55 @@ export default new Router({
             name:'index',
             component:()=>import('@/page/home'),
             meta:{
-                title:'首页'
+                title:'剁手党“翻”身啦'
+            }
+        },
+        {
+            path:'/loading',
+            name:'loading',
+            component:()=>import('@/page/loading'),
+            meta:{
+                title:'剁手党“翻”身啦'
+            }
+        },
+        {
+            path:'/activity',
+            name:'activity',
+            component:()=>import('@/page/activity'),
+            meta:{
+                title:'剁手党“翻”身啦'
+            }
+        },
+        {
+            path:'/rule',
+            name:'rule',
+            component:()=>import('@/page/rule'),
+            meta:{
+                title:'剁手党“翻”身啦'
+            }
+        },
+        {
+            path:'/myPrize',
+            name:'myPrize',
+            component:()=>import('@/page/myPrize'),
+            meta:{
+                title:'剁手党“翻”身啦'
+            }
+        },
+        {
+            path:'/unStart',
+            name:'unStart',
+            component:()=>import('@/page/unStart'),
+            meta:{
+                title:'剁手党“翻”身啦'
+            }
+        },
+        {
+            path:'/gameOver',
+            name:'gameOver',
+            component:()=>import('@/page/gameOver'),
+            meta:{
+                title:'剁手党“翻”身啦'
             }
         }
     ]

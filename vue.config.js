@@ -5,7 +5,7 @@ const path = require('path');
 // const is_prod = ['production', 'prod'].includes(process.env.node_env);
 // const resolve = (dir) => path.join(__dirname, dir);
 module.exports = {
-    publicPath:'./',
+    publicPath:'/',
     assetsDir:'static',
     chainWebpack: config => {
         const oneOfsMap = config.module.rule('scss').oneOfs.store
@@ -22,8 +22,8 @@ module.exports = {
     },
     // css: {
     //     loaderOptions: {
-    //         sass: {
-    //             prependData: `@import "@/style/app.scss";` //引入全局变量   
+    //         css: {
+    //             prependData: `@import "@/src/style/app.css";` //引入全局变量   
     //         }
     //     }
     // }
