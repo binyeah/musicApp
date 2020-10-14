@@ -20,6 +20,7 @@ module.exports = {
                 .end()
         })
     },
+<<<<<<< HEAD
     // css: {
     //     loaderOptions: {
     //         css: {
@@ -28,3 +29,6 @@ module.exports = {
     //     }
     // }
 }
+=======
+}
+>>>>>>> f13677fbc95e4af0046efb457c0ccff8480afa52
