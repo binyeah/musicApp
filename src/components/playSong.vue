@@ -9,8 +9,8 @@
                 <div>{{ (songDetail||{}).name }}</div>
                 <div></div>
             </div>
-            <div class="lyric">
-                <scroll class="lyric-wrapper" ref="lyricList" :data="(lyric || {}).lines">
+            <div class="lyric" v-if="lyric">
+                <scroll class="lyric-wrapper" ref="lyricList" :data="(lyric || {}).lines" >
                     <div>
                     <div class="lyric">
                         <p
@@ -82,7 +82,6 @@
                         background="transparent"
                         :text="txt"
                             />
-                        <!-- <marquee behavior="slide">哈哈哈哈哈哈哈dfhhfdhvjdf对方的回复好的好地方</marquee> -->
                     </div>
                 </div>
             </div>
@@ -92,7 +91,7 @@
     </div>
 </template>
 <script>
-import { detail, songUrl, lyric } from "@/api/proxy.js";
+import api from "@/api/proxy.js";
 import { mapGetters } from "vuex"; //先要引入
 import Lyric from "lyric-parser";
 import scroll from "./scroll.vue";
@@ -104,7 +103,7 @@ export default {
         return {
             songDetail: {},
             songUrl: "",
-            lyric: [],
+            lyric: null,
             pageStyle: {
                 display: "none",
             },
@@ -114,6 +113,7 @@ export default {
             open: true,
             txt:"",
             playing:true,
+            songList:[]
         };
     },
     computed: {
@@ -124,9 +124,11 @@ export default {
     mounted() {},
     methods: {
         init() {
-            this.open = true
-            this.lyric = {}
-            this.songUrl = ''
+            this.open = true;
+            // this.lyric = null;
+            this.songUrl = '';
+            this.txt = '';
+            this.currentLineNum = 0;
             this.songDetail = {}
             if (this.id) {
                 this.getSongDetail(this.id);
@@ -179,20 +181,21 @@ export default {
         
         async getSongDetail(id) {
             try {
-                const res = await detail({ id });
+                const res = await api.detail({ ids:id });
                 // console.log(res)
                 this.songDetail = res.songs[0] || {};
                 this.pageStyle = {
                 backgroundImage: "url(" + this.songDetail.al.picUrl + ")",
                 display: "block",
                 };
+                this.getSongList(this.songDetail.al.id)
             } catch (error) {
                 console.log(error);
             }
         },
         async getSongUrl(id) {
             try {
-                const res = await songUrl({ id });
+                const res = await api.songUrl({ id });
                 this.songUrl = res.data[0].url || "";
                 if (this.songUrl) {
                 setTimeout(() => {
@@ -207,16 +210,37 @@ export default {
         },
         async getSongLyric(id) {
             try {
-                const res = await lyric({ id });
-                this.lyric = new Lyric(res.lrc.lyric, this.lyricHandler);
-                this.lyric.seek(0)
+                if(this.lyric){
+                    this.lyric.stop();
+                    this.lyric = null;
+                }
+                const res = await api.lyric({ id });
+                let lyric = null;
+                lyric = res.lrc.lyric;
+                if(lyric){
+                    this.lyric = new Lyric(lyric, this.lyricHandler);
+                    this.lyric.play();
+                    this.currentLineNum=0;
+                    if(this.$refs.lyricList){
+                        this.$refs.lyricList.scrollTo(0, 0, 1000)
+                    }
+                }
                 // console.log(this.lyric)
             } catch (error) {
                 console.log(error);
             }
         },
+        async getSongList(id) {
+            try {
+                const res = await api.playlist({ id });
+                // this.songList = res.data
+                console.log(res)
+            } catch (error) {
+                console.log(error);
+            }
+        },
         lyricHandler({ lineNum, txt }) {
-            // console.log(lineNum, txt);
+            // console.log(lineNum, txt );
             this.txt = txt
             this.currentLineNum = lineNum;
             // 若当前行大于5,开始滚动,以保歌词显示于中间位置
@@ -297,7 +321,7 @@ export default {
             // margin-top: 0.5rem;
             height: 2rem;
             padding:  0.2rem;
-            background-color: rgba($color: #fff, $alpha: 0.6);
+            background-color: rgba($color: #000, $alpha: 0.5);
         }
     }
     .close {

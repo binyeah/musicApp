@@ -1,5 +1,5 @@
 <template>
-    <div class="home">
+    <div class="home" ref="page">
         <div class="header">
             <van-search
             v-model="keyWord"
@@ -23,7 +23,7 @@ import myHeader from './components/myheader';
 import songList from './components/songList';
 import searchList from './components/searchList';
 import banner from './components/banner';
-import {newsong,search,getbanner} from '@/api/proxy.js';
+import api from '@/api/proxy.js';
 export default {
     name:"home",
     components:{
@@ -53,7 +53,7 @@ export default {
                 const data = {
                     keywords:keyWord
                 }
-                const res = await search(data)
+                const res = await api.search(data)
                 this.searchList = res.result.songs || []
                 // console.log(this.searchList)
             }catch(e){
@@ -68,9 +68,9 @@ export default {
             this.isSearch = false
         },
         async getNewSongs(){
-            // console.log(data)
+            // console.log(api)
             try{
-                const res = await newsong()
+                const res = await api.newsong()
                 this.songList = res.result || []
                 // console.log(this.songList)
             }catch(e){
@@ -80,7 +80,7 @@ export default {
         async getBanner(){
             // console.log(data)
             try{
-                const res = await getbanner()
+                const res = await api.getbanner({type:2})
                 this.bannerList = res.banners || []
             }catch(e){
                 console.log(e)
